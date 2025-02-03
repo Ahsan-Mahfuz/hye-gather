@@ -187,7 +187,7 @@ const Vendors = () => {
         className="text-xl font-semibold cursor-pointer mt-5"
         onClick={() => Navigate(-1)}
       >
-        ← Users
+        ← Vendors
       </h1>
       <Table
         columns={columns}

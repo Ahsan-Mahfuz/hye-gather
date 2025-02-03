@@ -10,6 +10,7 @@ import Dashboard from '../Pages/layout/Dashboard'
 import DashboardHome from '../Pages/dashboardHome/DashboardHome'
 import Users from '../Pages/users/Users'
 import Vendors from '../Pages/vendors/Vendors'
+import Bookings from '../Pages/bookings/Bookings'
 
 // import AboutUs from '../Pages/aboutUs/AboutUs'
 // import ContactUs from '../Pages/contactUs/ContactUs'
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: '/vendors',
         element: <Vendors />,
+      },
+      {
+        path: '/bookings',
+        element: <Bookings />,
       },
       // {
       //   path: '/privacy-policy',
