@@ -3,15 +3,19 @@ import { createBrowserRouter } from 'react-router-dom'
 import Login from '../Pages/auth/Login'
 import ForgetPassword from '../Pages/auth/ForgetPassword'
 import ResetPassword from '../Pages/auth/ResetPassword'
+import SendOtp from '../Pages/auth/SendOtp'
 
 import AdminRoute from '../ProtectedRoute/AdminRoute'
 import Dashboard from '../Pages/layout/Dashboard'
 import DashboardHome from '../Pages/dashboardHome/DashboardHome'
-import AboutUs from '../Pages/aboutUs/AboutUs'
-import ContactUs from '../Pages/contactUs/ContactUs'
-import PrivacyPolicy from '../Pages/privacyPolicy/PrivacyPolicy'
-import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
-import Profile from '../Pages/profile/Profile'
+import Users from '../Pages/users/Users'
+import Vendors from '../Pages/vendors/Vendors'
+
+// import AboutUs from '../Pages/aboutUs/AboutUs'
+// import ContactUs from '../Pages/contactUs/ContactUs'
+// import PrivacyPolicy from '../Pages/privacyPolicy/PrivacyPolicy'
+// import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
+// import Profile from '../Pages/profile/Profile'
 
 const router = createBrowserRouter([
   {
@@ -26,27 +30,27 @@ const router = createBrowserRouter([
         index: true,
         element: <DashboardHome />,
       },
-      
+
       {
-        path: '/about-us',
-        element: <AboutUs />,
+        path: '/users',
+        element: <Users />,
       },
       {
-        path: '/contact-us',
-        element: <ContactUs />,
+        path: '/vendors',
+        element: <Vendors />,
       },
-      {
-        path: '/privacy-policy',
-        element: <PrivacyPolicy />,
-      },
-      {
-        path: '/terms-and-condition',
-        element: <TermsAndConditions />,
-      },
-      {
-        path: '/profile',
-        element: <Profile />,
-      },
+      // {
+      //   path: '/privacy-policy',
+      //   element: <PrivacyPolicy />,
+      // },
+      // {
+      //   path: '/terms-and-condition',
+      //   element: <TermsAndConditions />,
+      // },
+      // {
+      //   path: '/profile',
+      //   element: <Profile />,
+      // },
     ],
   },
   {
@@ -56,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: '/forget-password',
     element: <ForgetPassword />,
+  },
+  {
+    path: '/send-otp',
+    element: <SendOtp />,
   },
   {
     path: '/reset-password',

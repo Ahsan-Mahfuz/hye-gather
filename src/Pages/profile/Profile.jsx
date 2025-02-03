@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Password from './Password'
 import { Button, Form, Input, message, Upload } from 'antd'
 import { UploadOutlined, LoadingOutlined } from '@ant-design/icons'
-import profileImage from '../../assets/profile.png'
 import { useNavigate } from 'react-router-dom'
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('profile')

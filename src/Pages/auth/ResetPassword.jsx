@@ -1,7 +1,7 @@
 import { Form, Input, Button, Checkbox } from 'antd'
-import login from '../../assets/procure-hero-page.jpg' // Importing the login image
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import hye_logo from '../../assets/hye_logo.svg'
 const ResetPassword = () => {
   const navigate = useNavigate()
   const onFinish = (values) => {
@@ -11,10 +11,13 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="h-screen flex">
-      <div className="w-1/2 bg-white flex flex-col justify-center items-center p-12">
-        <h1 className="text-3xl font-bold text-teal-600 mb-2">Procure</h1>
-        <p className="text-lg text-gray-700 mb-8">Enter new password</p>
+    <div className="h-screen flex items-center justify-center w-[500px] mx-auto">
+      <div className=" shadow bg-white flex flex-col justify-center items-center w-full  p-12 rounded-md">
+        <img src={hye_logo} alt="logo" />
+        <h1 className="text-4xl font-bold  m-2 viga-text app-default-color ">
+          HYE GATHER
+        </h1>
+        <p className="text-3xl  mb-8 font-bold">Set new password</p>
 
         <Form layout="vertical" onFinish={onFinish} className="w-full max-w-sm">
           <Form.Item
@@ -59,25 +62,20 @@ const ResetPassword = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white h-[42px] rounded-md"
+            <button
+              type="submit"
+              className="w-full bg-blue-900 hover:bg-blue-800 text-white h-[42px] rounded-md"
             >
               Reset Password
-            </Button>
+            </button>
           </Form.Item>
         </Form>
 
         <div className="text-center">
-          <Link to="/login" className="text-teal-600 hover:underline text-sm">
+          <Link to="/login" className="text-blue-800 hover:underline ">
             Sign in instead
           </Link>
         </div>
-      </div>
-
-      <div className="w-1/2">
-        <img src={login} alt="Login" className="w-full h-full object-cover" />
       </div>
     </div>
   )

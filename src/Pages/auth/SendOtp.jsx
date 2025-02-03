@@ -1,11 +1,12 @@
-import { Form, Input, Button } from 'antd'
+import { Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import hye_logo from '../../assets/hye_logo.svg'
-const ForgetPassword = () => {
+const SendOtp = () => {
   const navigate = useNavigate()
-  const onFinish = (values) => {
+
+  const onFinishOtp = (values) => {
     console.log(values)
-    navigate('/send-otp')
+    navigate('/login')
   }
 
   return (
@@ -16,27 +17,31 @@ const ForgetPassword = () => {
           HYE GATHER
         </h1>
         <h1 className="text-3xl font-bold  mb-2 ">Forget Password</h1>
-        <p className="text-lg  m-5">Please enter the email address</p>
-        <Form layout="vertical" onFinish={onFinish} className="w-full max-w-sm">
+        <p className="text-lg  m-5">Please enter your OTP</p>
+
+        <Form
+          layout="vertical"
+          onFinish={onFinishOtp}
+          className="w-full max-w-sm"
+        >
           <Form.Item
-            name="email"
-            rules={[
-              { required: true, message: 'Please enter your email!' },
-              { type: 'email', message: 'Please enter a valid email!' },
-            ]}
+            name="otp"
+            rules={[{ required: true, message: 'Please enter the OTP!' }]}
           >
-            <Input
-              placeholder="Enter email"
-              className="h-[42px] px-4 border-gray-300 rounded-md"
-            />
+            <div className="flex gap-2">
+              <Input.OTP
+                length={6}
+                className="w-12 h-[42px] text-center border-gray-300 rounded-md"
+              />
+            </div>
           </Form.Item>
 
           <Form.Item>
             <button
               type="submit"
-              className="w-full bg-blue-900 hover:bg-blue-800 disabled:bg-gray-400 text-white h-[42px] rounded-md"
+              className="w-full bg-blue-900 hover:bg-blue-800 text-white h-[42px] rounded-md"
             >
-              Send OTP
+              Next
             </button>
           </Form.Item>
         </Form>
@@ -54,4 +59,4 @@ const ForgetPassword = () => {
   )
 }
 
-export default ForgetPassword
+export default SendOtp

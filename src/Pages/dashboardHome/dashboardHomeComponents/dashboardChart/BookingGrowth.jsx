@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 )
 
-const UserGrowthData = () => {
+const BookingGrowth = () => {
   const currentYear = new Date().getFullYear()
 
   const years = Array.from(
@@ -44,13 +44,13 @@ const UserGrowthData = () => {
     'Dec',
   ]
 
-  const userGrowthData = {
+  const BookingGrowth = {
     labels: months,
     datasets: [
       {
         label: 'User Growth',
         data: [100, 80, 75, 78, 77, 90, 85, 80, 75, 78, 76, 79],
-        backgroundColor: '#0d9276',
+        backgroundColor: '#0033A0',
       },
     ],
   }
@@ -58,8 +58,8 @@ const UserGrowthData = () => {
   return (
     <div className="w-1/2 bg-white p-4 rounded-lg shadow">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold">User Growth</h2>
-        <select className="p-2 bg-gray-100 cursor-pointer outline-none">
+        <h2 className="text-lg font-semibold">Booking Growth </h2>
+        <select className="p-2 bg-blue-100  rounded-md cursor-pointer outline-none">
           {years.map((year) => (
             <option key={year} value={year} className="p-2 cursor-pointer">
               {year}
@@ -67,9 +67,18 @@ const UserGrowthData = () => {
           ))}
         </select>
       </div>
-      <Bar data={userGrowthData} />
+      <Bar
+        data={BookingGrowth}
+        options={{
+          elements: {
+            bar: {
+              borderRadius: 10,
+            },
+          },
+        }}
+      />
     </div>
   )
 }
 
-export default UserGrowthData
+export default BookingGrowth

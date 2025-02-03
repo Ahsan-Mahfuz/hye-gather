@@ -60,7 +60,7 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-between items-center bg-white p-5 shadow-md rounded-md">
-      <p className="text-2xl font-bold text-[#0D9276] ">Dashboard</p>
+      <p className="text-2xl font-bold text-[#0033A0]">Dashboard</p>
       <div className="flex items-center gap-4">
         <Popover
           content={NotificationContent}
