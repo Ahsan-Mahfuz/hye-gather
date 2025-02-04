@@ -8,7 +8,7 @@ import deleteUser from '../../assets/delete-user.png'
 import { IoIosWarning } from 'react-icons/io'
 import { MdBlock } from 'react-icons/md'
 
-const Users = () => {
+const Users = ({ dashboardHome }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
@@ -144,16 +144,18 @@ const Users = () => {
 
   return (
     <div className="mb-20">
-      <h1
-        className="text-xl font-semibold cursor-pointer mt-5"
-        onClick={() => Navigate(-1)}
-      >
-        ← Users
-      </h1>
+      {!dashboardHome && (
+        <h1
+          className="text-xl font-semibold cursor-pointer mt-5"
+          onClick={() => Navigate(-1)}
+        >
+          ← Users
+        </h1>
+      )}
       <Table
         columns={columns}
         dataSource={data}
-        pagination={{ position: ['bottomCenter'] }}
+        pagination={dashboardHome ? false : { position: ['bottomCenter'] }}
         className="mt-5"
       />
 

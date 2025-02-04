@@ -3,10 +3,14 @@ import { Table, Button, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import 'tailwindcss/tailwind.css'
 import { useNavigate } from 'react-router-dom'
+import { IoIosWarning } from 'react-icons/io'
+import deleteUser from '../../assets/delete-user.png'
+import toast from 'react-hot-toast'
 
 const PromoCodes = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedPromo, setSelectedPromo] = useState(null)
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [promoData, setPromoData] = useState([
     {
       key: '1',
@@ -36,6 +40,7 @@ const PromoCodes = () => {
       expirationDate: '2025-02-26',
     },
   ])
+
   const Navigate = useNavigate()
 
   const columns = [
@@ -81,7 +86,7 @@ const PromoCodes = () => {
           />
           <Button
             icon={<DeleteOutlined />}
-            onClick={() => handleDeletePromo(record.key)}
+            onClick={() => handleDeletePromo(record)}
             className="bg-red-500 text-white"
           />
         </div>
@@ -94,8 +99,21 @@ const PromoCodes = () => {
     setIsModalVisible(true)
   }
 
-  const handleDeletePromo = (key) => {
-    setPromoData(promoData.filter((promo) => promo.key !== key))
+  const handleDeletePromo = (promo) => {
+    setSelectedPromo(promo)
+    setIsDeleteModalVisible(true)
+  }
+
+  const handleConfirmDelete = () => {
+    setPromoData(promoData.filter((promo) => promo.key !== selectedPromo.key))
+    toast.success('Promo code deleted successfully!')
+    setIsDeleteModalVisible(false)
+    setSelectedPromo(null)
+  }
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalVisible(false)
+    setSelectedPromo(null)
   }
 
   const handleCloseModal = () => {
@@ -109,6 +127,7 @@ const PromoCodes = () => {
         promo.key === selectedPromo.key ? selectedPromo : promo
       )
       setPromoData(updatedPromoData)
+      toast.success('Promo code edited successfully!')
     } else {
       const newPromo = {
         key: Date.now().toString(),
@@ -120,6 +139,7 @@ const PromoCodes = () => {
         expirationDate: selectedPromo.expirationDate,
       }
       setPromoData([newPromo, ...promoData])
+      toast.success('Promo code added successfully!')
     }
     setIsModalVisible(false)
     setSelectedPromo(null)
@@ -249,24 +269,49 @@ const PromoCodes = () => {
           <div className="flex justify-center">
             <Button
               type="primary"
-              onClick={() => {
-                if (
-                  !selectedPromo?.promoCode ||
-                  !selectedPromo?.discountType ||
-                  !selectedPromo?.discountValue ||
-                  !selectedPromo?.startDate ||
-                  !selectedPromo?.expirationDate ||
-                  !selectedPromo?.usageLimit
-                ) {
-                  alert('Please fill up all the fields')
-                  return
-                }
-                handleSavePromo()
-              }}
+              onClick={handleSavePromo}
               className="bg-blue-500 text-white"
             >
               {selectedPromo ? 'Save' : 'Add'}
             </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        visible={isDeleteModalVisible}
+        onCancel={handleCancelDelete}
+        onOk={handleConfirmDelete}
+        okText="Yes"
+        cancelText="Cancel"
+        centered
+        okButtonProps={{
+          style: {
+            backgroundColor: 'red',
+            borderColor: 'red',
+          },
+        }}
+        cancelButtonProps={{
+          style: {
+            backgroundColor: 'blue',
+            borderColor: 'blue',
+            color: 'white',
+          },
+        }}
+      >
+        <div
+          className="text-lg bg-no-repeat bg-left-top bg-contain h-[200px] object-contain"
+          style={{
+            backgroundImage: `url(${deleteUser})`,
+          }}
+        >
+          <div className="flex justify-center items-end">
+            <IoIosWarning className="text-7xl text-yellow-400" />
+          </div>
+          <div className="font-bold text-5xl text-center">Warning</div>
+          <div className="p-5 text-center text-red-700 w-[500px] mx-auto">
+            Are you sure you want to delete the promo code{' '}
+            {selectedPromo?.promoCode}?
           </div>
         </div>
       </Modal>

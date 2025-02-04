@@ -1,13 +1,14 @@
-import { FaHome, FaUserTie, FaShieldAlt } from 'react-icons/fa'
+import { FaHome, FaShieldAlt } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
-import { LuGitPullRequestArrow } from 'react-icons/lu'
-import { BiCategory } from 'react-icons/bi'
 import { FaUserGroup } from 'react-icons/fa6'
-import { MdOutlineStarRate } from 'react-icons/md'
-import { TbArrowRoundaboutRight } from 'react-icons/tb'
 import { CgProfile } from 'react-icons/cg'
 import { CiLogout } from 'react-icons/ci'
+import { SiFuturelearn } from 'react-icons/si'
 import hye_logo from '../../../assets/hye_logo.svg'
+import { PiNotebookFill } from 'react-icons/pi'
+import { BiSolidOffer } from 'react-icons/bi'
+import { GrServices } from 'react-icons/gr'
+import { PiUsersFourFill } from "react-icons/pi";
 
 const Sidebar = () => {
   const menuItems = [
@@ -15,24 +16,24 @@ const Sidebar = () => {
     {
       name: 'Users',
       link: '/users',
-      icon: <LuGitPullRequestArrow />,
+      icon: <PiUsersFourFill />,
     },
-    { name: 'Vendors', link: '/vendors', icon: <BiCategory /> },
-    { name: 'Bookings', link: '/bookings', icon: <FaUserTie /> },
+    { name: 'Vendors', link: '/vendors', icon: <FaUserGroup /> },
+    { name: 'Bookings', link: '/bookings', icon: <PiNotebookFill /> },
     {
       name: 'Earnings',
       link: '/earnings',
-      icon: <FaUserGroup />,
+      icon: <SiFuturelearn />,
     },
     {
       name: 'Service Category',
       link: '/service-category',
-      icon: <MdOutlineStarRate />,
+      icon: <GrServices />,
     },
     {
       name: 'Promo Codes',
       link: '/promo-codes',
-      icon: <TbArrowRoundaboutRight />,
+      icon: <BiSolidOffer />,
     },
     {
       name: 'Profile Settings',

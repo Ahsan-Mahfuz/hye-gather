@@ -16,9 +16,9 @@ import PrivacyPolicy from '../Pages/privacyPolicy/PrivacyPolicy'
 import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
 import Profile from '../Pages/profile/Profile'
 import PromoCodes from '../Pages/promoCodes/PromoCodes'
+import ServiceCategory from '../Pages/serviceCategory/ServiceCategory'
 
-// import AboutUs from '../Pages/aboutUs/AboutUs'
-// import ContactUs from '../Pages/contactUs/ContactUs'
+
 
 const router = createBrowserRouter([
   {
@@ -49,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: '/earnings',
         element: <Earnings />,
+      },
+      {
+        path: '/service-category',
+        element: <ServiceCategory />,
       },
       {
         path: '/privacy-policy',

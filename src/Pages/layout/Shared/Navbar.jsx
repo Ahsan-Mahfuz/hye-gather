@@ -70,7 +70,7 @@ const Navbar = () => {
           onVisibleChange={handleVisibleChange}
         >
           <button className="relative text-2xl text-blue-600 p-2 rounded-full border">
-            <MdNotificationsNone className='text-[#0D9276]' />
+            <MdNotificationsNone className="text-[#0D9276]" />
             {notifications.some((notif) => !notif.read) && (
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs h-4 w-4 font-bold px-1 rounded-full">
                 !

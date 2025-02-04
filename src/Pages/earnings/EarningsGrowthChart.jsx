@@ -76,7 +76,7 @@ const EarningsGrowthChart = () => {
             },
           },
         }}
-        width={900}
+        width={800}
       />
     </div>
   )

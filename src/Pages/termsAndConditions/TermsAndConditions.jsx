@@ -50,7 +50,7 @@ const TermsAndConditions = () => {
             </button>
             <button
               onClick={handleCustomerSave}
-              className="px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+              className="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800"
             >
               Save
             </button>

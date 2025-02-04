@@ -83,7 +83,7 @@ const Password = () => {
           </Form.Item>
 
           <div className="flex items-center justify-center gap-1.5">
-            <Button type="primary" onClick={handleSaveClick}>
+            <Button type="primary" onClick={handleSaveClick} className="bg-blue-900 text-white rounded-md ">
               Save
             </Button>
             <Button onClick={handleCancelClick}>Cancel</Button>

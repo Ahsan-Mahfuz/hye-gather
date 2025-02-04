@@ -48,7 +48,7 @@ const BookingGrowth = () => {
     labels: months,
     datasets: [
       {
-        label: 'User Growth',
+        label: 'Booking Growth',
         data: [100, 80, 75, 78, 77, 90, 85, 80, 75, 78, 76, 79],
         backgroundColor: '#0033A0',
       },
@@ -56,7 +56,7 @@ const BookingGrowth = () => {
   }
 
   return (
-    <div className="w-1/2 bg-white p-4 rounded-lg shadow">
+    <div className="w-5/6 bg-white p-4 rounded-lg shadow">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold">Booking Growth </h2>
         <select className="p-2 bg-blue-100  rounded-md cursor-pointer outline-none">
@@ -76,6 +76,8 @@ const BookingGrowth = () => {
             },
           },
         }}
+        width={700}
+        height={250}
       />
     </div>
   )

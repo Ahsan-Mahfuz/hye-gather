@@ -39,35 +39,6 @@ const Profile = () => {
     }
   }
 
-  const handleFileUpload = async (info) => {
-    setLoading(true)
-
-    const uploadedFile = info.file.originFileObj || info.file
-
-    if (!(uploadedFile instanceof File)) {
-      message.error('Invalid file type. Please upload a valid PDF.')
-      setLoading(false)
-      return
-    }
-
-    setTimeout(() => {
-      setLoading(false)
-
-      try {
-        const fileURL = URL.createObjectURL(uploadedFile)
-
-        setFormData({
-          ...formData,
-          pdf: { name: uploadedFile.name, file: uploadedFile, url: fileURL },
-        })
-
-        message.success(`${uploadedFile.name} uploaded successfully`)
-      } catch (error) {
-        console.error('Error creating object URL:', error)
-        message.error('Error displaying uploaded file.')
-      }
-    }, 2000)
-  }
   const handleImageUpload = async (info) => {
     setImageLoading(true)
 
@@ -180,6 +151,7 @@ const Profile = () => {
                       type="primary"
                       onClick={handleUpdate}
                       disabled={loading}
+                      className="bg-blue-900 text-white rounded-md "
                     >
                       {isEditing ? 'Save' : 'Update Now'}
                     </Button>
