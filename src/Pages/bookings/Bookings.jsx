@@ -10,7 +10,7 @@ const data = [
     vendorName: 'Marvin McKinney',
     vendorImage: 'https://avatars.githubusercontent.com/u/101224?v=5',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician', 'DJ','Musician', 'DJ','Musician', 'DJ','Musician', 'DJ'],
     location: '456 Party Ln, NY',
     eventDate: '2025-01-10',
     amount: '$500',
@@ -23,11 +23,11 @@ const data = [
     vendorName: 'Marvin McKinney',
     vendorImage: 'https://avatars.githubusercontent.com/u/101214?v=6',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician'],
     location: '456 Party Ln, NY',
     eventDate: '2025-01-10',
     amount: '$500',
-    status: 'Completed',
+    status: 'Canceled',
   },
   {
     key: '3',
@@ -36,7 +36,7 @@ const data = [
     vendorName: 'Marvin McKinney',
     vendorImage: 'https://avatars.githubusercontent.com/u/101314?v=7',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician'],
     location: '456 Party Ln, NY',
     eventDate: '2025-01-10',
     amount: '$500',
@@ -49,7 +49,7 @@ const data = [
     vendorName: 'Eleanor Pena',
     vendorImage: 'https://avatars.githubusercontent.com/u/101314?v=8',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician'],
     location: '123 Wedding Blvd, CA',
     eventDate: '2025-01-10',
     amount: '$500',
@@ -62,7 +62,7 @@ const data = [
     vendorName: 'Kathryn Murphy',
     vendorImage: 'https://avatars.githubusercontent.com/u/101314?v=9',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician'],
     location: '123 Wedding Blvd, CA',
     eventDate: '2025-01-10',
     amount: '$500',
@@ -75,7 +75,7 @@ const data = [
     vendorName: 'Robert Fox',
     vendorImage: 'https://avatars.githubusercontent.com/u/101314?v=10',
     bookingDate: '2025-01-10',
-    service: 'Musician',
+    service: ['Musician'],
     location: '123 Wedding Blvd, CA',
     eventDate: '2025-01-10',
     amount: '$500',
@@ -119,6 +119,23 @@ const columns = [
     title: 'Service',
     dataIndex: 'service',
     key: 'service',
+    render: (service) => (
+      <div className="flex flex-wrap gap-2 w-[300px]">
+        {service.slice(0, 2).map((category, index) => (
+          <span
+            key={index}
+            className="px-4 py-2 bg-green-100 rounded-md text-green-800"
+          >
+            {category}
+          </span>
+        ))}
+        {service.length > 2 && (
+          <span className="px-2 py-2 flex items-center justify-center bg-green-100 rounded-md text-green-800">
+            +{service.length - 2}
+          </span>
+        )}
+      </div>
+    ),
   },
   {
     title: 'Location',
@@ -148,7 +165,14 @@ const columns = [
       } else if (status === 'Canceled') {
         color = 'red'
       }
-      return <Tag color={color}>{status}</Tag>
+      return (
+        <Tag
+          color={color}
+          className="font-bold  p-2 w-full max-w-[100px] flex items-center justify-center"
+        >
+          {status}
+        </Tag>
+      )
     },
   },
 ]

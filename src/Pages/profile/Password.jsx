@@ -24,7 +24,7 @@ const Password = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="rounded-lg  w-full ">
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" requiredMark={false}>
           <Form.Item
             label="Current Password"
             name="currentPassword"

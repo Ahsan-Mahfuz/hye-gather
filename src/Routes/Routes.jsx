@@ -11,12 +11,14 @@ import DashboardHome from '../Pages/dashboardHome/DashboardHome'
 import Users from '../Pages/users/Users'
 import Vendors from '../Pages/vendors/Vendors'
 import Bookings from '../Pages/bookings/Bookings'
+import Earnings from '../Pages/earnings/Earnings'
+import PrivacyPolicy from '../Pages/privacyPolicy/PrivacyPolicy'
+import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
+import Profile from '../Pages/profile/Profile'
+import PromoCodes from '../Pages/promoCodes/PromoCodes'
 
 // import AboutUs from '../Pages/aboutUs/AboutUs'
 // import ContactUs from '../Pages/contactUs/ContactUs'
-// import PrivacyPolicy from '../Pages/privacyPolicy/PrivacyPolicy'
-// import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
-// import Profile from '../Pages/profile/Profile'
 
 const router = createBrowserRouter([
   {
@@ -44,18 +46,26 @@ const router = createBrowserRouter([
         path: '/bookings',
         element: <Bookings />,
       },
-      // {
-      //   path: '/privacy-policy',
-      //   element: <PrivacyPolicy />,
-      // },
-      // {
-      //   path: '/terms-and-condition',
-      //   element: <TermsAndConditions />,
-      // },
-      // {
-      //   path: '/profile',
-      //   element: <Profile />,
-      // },
+      {
+        path: '/earnings',
+        element: <Earnings />,
+      },
+      {
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: '/terms-and-condition',
+        element: <TermsAndConditions />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/promo-codes',
+        element: <PromoCodes />,
+      },
     ],
   },
   {

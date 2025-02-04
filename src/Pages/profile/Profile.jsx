@@ -3,6 +3,7 @@ import Password from './Password'
 import { Button, Form, Input, message, Upload } from 'antd'
 import { UploadOutlined, LoadingOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import profileImage from '../../assets/hye_logo.svg'
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [form] = Form.useForm()
@@ -105,7 +106,7 @@ const Profile = () => {
       >
         <h1 className="text-xl font-semibold">← Pro User Manage</h1>
       </div>
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
+      <div className=" flex flex-col items-center py-10">
         <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl">
           <div className="flex flex-col items-center">
             <img
@@ -163,17 +164,13 @@ const Profile = () => {
               <div className="rounded-lg  w-full max-w-3xl">
                 <Form form={form} layout="vertical" initialValues={formData}>
                   <div className="flex flex-col gap-1">
-                    <Form.Item label="User Name" name="fullName">
+                    <Form.Item label="First Name" name="first name">
                       <Input disabled={!isEditing} className="h-[40px]" />
                     </Form.Item>
-
+                    <Form.Item label="Last Name" name="last name">
+                      <Input disabled={!isEditing} className="h-[40px]" />
+                    </Form.Item>
                     <Form.Item label="Email" name="email">
-                      <Input disabled={!isEditing} className="h-[40px]" />
-                    </Form.Item>
-                    <Form.Item label="Contact" name="contact">
-                      <Input disabled={!isEditing} className="h-[40px]" />
-                    </Form.Item>
-                    <Form.Item label="Address" name="address">
                       <Input disabled={!isEditing} className="h-[40px]" />
                     </Form.Item>
                   </div>
