@@ -1,5 +1,5 @@
 import { FaHome, FaShieldAlt } from 'react-icons/fa'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { FaUserGroup } from 'react-icons/fa6'
 import { CgProfile } from 'react-icons/cg'
 import { CiLogout } from 'react-icons/ci'
@@ -53,7 +53,7 @@ const Sidebar = () => {
   ]
   const Navigate = useNavigate()
   return (
-    <div className=" w-[250px] h-[96vh] overflow-y-scroll px-3 bg-white">
+    <div className=" w-[250px] h-[96vh] overflow-y-scroll px-3 bg-white  ">
       <div
         className="flex flex-col justify-center items-center cursor-pointer"
         onClick={() => Navigate('/')}
@@ -69,7 +69,7 @@ const Sidebar = () => {
             to={item?.link}
             key={index}
             className={({ isActive }) =>
-              `flex items-center  py-3 rounded-3xl my-1 pl-6  hover:bg-[#0033A0] cursor-pointer hover:text-white ${
+              `flex items-center  py-3 rounded-3xl my-1 pl-6 hover:bg-[#0033A0] cursor-pointer hover:text-white ${
                 isActive ? 'bg-[#0033A0] text-white' : ''
               }`
             }

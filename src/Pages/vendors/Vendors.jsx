@@ -98,7 +98,7 @@ const Vendors = () => {
       ),
     },
     {
-      title: 'Total Book',
+      title: 'Total Bookings',
       dataIndex: 'totalBook',
       key: 'totalBook',
       render: (text) => (
@@ -250,7 +250,7 @@ const Vendors = () => {
               </div>
               <div className="text-center border-t border-black  p-5">
                 <span className="text-xl font-bold">{3}</span>{' '}
-                <p>Upcoming Bookings</p>
+                <p>Total Reviews</p>
               </div>
               <div className="text-center border-r border-t  border-black  p-5">
                 <span className="text-xl font-bold">{8}</span>{' '}

@@ -69,8 +69,8 @@ const Navbar = () => {
           visible={visible}
           onVisibleChange={handleVisibleChange}
         >
-          <button className="relative text-2xl text-blue-600 p-2 rounded-full border">
-            <MdNotificationsNone className="text-[#0D9276]" />
+          <button className="relative text-2xl text-blue-600 p-2 rounded-full border transition duration-300 bg-blue-900 hover:bg-blue-700 hover:shadow-md">
+            <MdNotificationsNone className="text-white " />
             {notifications.some((notif) => !notif.read) && (
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs h-4 w-4 font-bold px-1 rounded-full">
                 !
@@ -80,12 +80,12 @@ const Navbar = () => {
         </Popover>
         <Link
           to="/profile"
-          className="flex items-center gap-2 border p-2 rounded-md"
+          className="flex items-center gap-2 border p-2 rounded-md text-white bg-blue-900 transition duration-300 hover:bg-blue-700 hover:shadow-md"
         >
-          <FaUserCircle className="text-3xl text-gray-600" />
-          <div className="text-left">
+          <FaUserCircle className="text-3xl text-white" />
+          <div className="text-left ">
             <p className="text-sm font-semibold">John Doe</p>
-            <p className="text-xs text-gray-500">john.doe@example.com</p>
+            <p className="text-xs ">john.doe@example.com</p>
           </div>
         </Link>
       </div>

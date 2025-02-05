@@ -21,7 +21,7 @@ const Subscription = () => {
       <div className="max-w-[600px] mx-auto bg-white shadow-lg rounded-lg p-10 mt-20">
         <div className="flex items-center justify-center gap-5 mb-5">
           <img src={logo} alt="logo" className="w-[100px]" />
-          <div className="text-5xl text-blue-900 font-bold">HYE GATHER</div>
+          <div className="text-4xl text-blue-900 font-bold">HYE GATHER</div>
         </div>
         <div className="flex justify-center mb-4">
           <button
