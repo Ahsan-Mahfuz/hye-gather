@@ -17,6 +17,7 @@ import TermsAndConditions from '../Pages/termsAndConditions/TermsAndConditions'
 import Profile from '../Pages/profile/Profile'
 import PromoCodes from '../Pages/promoCodes/PromoCodes'
 import ServiceCategory from '../Pages/serviceCategory/ServiceCategory'
+import Subscription from '../Pages/subscription/Subscription'
 
 
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: '/promo-codes',
         element: <PromoCodes />,
+      },
+      {
+        path: '/subscription',
+        element: <Subscription />,
       },
     ],
   },

@@ -9,6 +9,7 @@ import { PiNotebookFill } from 'react-icons/pi'
 import { BiSolidOffer } from 'react-icons/bi'
 import { GrServices } from 'react-icons/gr'
 import { PiUsersFourFill } from "react-icons/pi";
+import { MdPaid } from "react-icons/md";
 
 const Sidebar = () => {
   const menuItems = [
@@ -20,6 +21,7 @@ const Sidebar = () => {
     },
     { name: 'Vendors', link: '/vendors', icon: <FaUserGroup /> },
     { name: 'Bookings', link: '/bookings', icon: <PiNotebookFill /> },
+    { name: 'Subscription', link: '/subscription', icon: <MdPaid /> },
     {
       name: 'Earnings',
       link: '/earnings',
