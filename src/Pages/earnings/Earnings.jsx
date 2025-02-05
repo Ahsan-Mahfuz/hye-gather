@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 const Earnings = () => {
   const Navigate = useNavigate()
   return (
-    <div className="mb-20 ">
+    <div className="mb-20">
       <h1
         className="text-xl font-semibold cursor-pointer my-5"
         onClick={() => Navigate(-1)}

@@ -1,5 +1,5 @@
 import { FaHome, FaShieldAlt } from 'react-icons/fa'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { FaUserGroup } from 'react-icons/fa6'
 import { CgProfile } from 'react-icons/cg'
 import { CiLogout } from 'react-icons/ci'
@@ -8,8 +8,9 @@ import hye_logo from '../../../assets/hye_logo.svg'
 import { PiNotebookFill } from 'react-icons/pi'
 import { BiSolidOffer } from 'react-icons/bi'
 import { GrServices } from 'react-icons/gr'
-import { PiUsersFourFill } from "react-icons/pi";
-import { MdPaid } from "react-icons/md";
+import { PiUsersFourFill } from 'react-icons/pi'
+import { MdPaid } from 'react-icons/md'
+import { isAction } from '@reduxjs/toolkit'
 
 const Sidebar = () => {
   const menuItems = [
@@ -50,10 +51,13 @@ const Sidebar = () => {
     },
     { name: 'Log out', link: '/login', icon: <CiLogout /> },
   ]
-
+  const Navigate = useNavigate()
   return (
     <div className=" w-[250px] h-[96vh] overflow-y-scroll px-3 bg-white">
-      <div className="flex flex-col justify-center items-center">
+      <div
+        className="flex flex-col justify-center items-center cursor-pointer"
+        onClick={() => Navigate('/')}
+      >
         <img src={hye_logo} alt="logo" className="mt-5 " />
         <h2 className="app-default-color font-bold text-center mb-5 text-3xl ">
           HYE GATHER
