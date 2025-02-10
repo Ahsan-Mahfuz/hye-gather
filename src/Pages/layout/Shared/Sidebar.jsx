@@ -39,6 +39,11 @@ const Sidebar = () => {
       icon: <BiSolidOffer />,
     },
     {
+      name: 'FAQ',
+      link: '/frequent-asked-question',
+      icon: <BiSolidOffer />,
+    },
+    {
       name: 'Profile Settings',
       link: '/profile',
       icon: <CgProfile />,

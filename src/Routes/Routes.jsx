@@ -18,8 +18,7 @@ import Profile from '../Pages/profile/Profile'
 import PromoCodes from '../Pages/promoCodes/PromoCodes'
 import ServiceCategory from '../Pages/serviceCategory/ServiceCategory'
 import Subscription from '../Pages/subscription/Subscription'
-
-
+import FAQ from '../Pages/faq/FAQ'
 
 const router = createBrowserRouter([
   {
@@ -74,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: '/subscription',
         element: <Subscription />,
+      },
+      {
+        path: '/frequent-asked-question',
+        element: <FAQ />,
       },
     ],
   },
