@@ -1,14 +1,35 @@
-import { Form, Input, Checkbox } from 'antd'
+import { Form, Input, Checkbox, Button } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import hye_logo from '../../assets/hye_logo.svg'
+import { useSignInMutation } from '../../redux/authApis'
+import { FiLoader } from 'react-icons/fi'
 
 const Login = () => {
   const navigate = useNavigate()
-  const onFinish = (values) => {
+
+  const [form] = Form.useForm()
+
+  const [postSignIn, { isLoading }] = useSignInMutation()
+
+  const onFinish = async (values) => {
     console.log(values)
-    toast.success('Login successfully!')
-    navigate('/')
+    try {
+      await postSignIn({
+        email: values.email,
+        password: values.password,
+      })
+        .unwrap()
+        .then((res) => {
+          toast.success(res?.message)
+          form.resetFields()
+          localStorage.setItem('token', res?.token)
+
+          navigate('/')
+        })
+    } catch (error) {
+      toast.error(error?.data?.message)
+    }
   }
 
   return (
@@ -42,7 +63,7 @@ const Login = () => {
             ]}
           >
             <Input
-              placeholder="Enter  Email"
+              placeholder="Enter Email"
               className="poppins-text h-[42px]  px-4 border-gray-300 rounded-md"
             />
           </Form.Item>
@@ -65,12 +86,20 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <button
-              type="submit"
+            <Button
+              htmlType="submit"
               className="w-full cursor-pointer poppins-text bg-blue-900 hover:bg-blue-800 text-white h-[42px] rounded-md flex items-center justify-center"
+              disabled={isLoading}
             >
-              Log in
-            </button>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  Loading...
+                  <FiLoader />
+                </div>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
           </Form.Item>
         </Form>
 

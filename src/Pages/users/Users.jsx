@@ -1,42 +1,49 @@
 import React, { useState } from 'react'
-import { Table, Button, Modal } from 'antd'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import 'tailwindcss/tailwind.css'
+import { Table, Button, Modal, Image } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { FaUserCircle } from 'react-icons/fa'
 import deleteUser from '../../assets/delete-user.png'
 import { IoIosWarning } from 'react-icons/io'
 import { MdBlock } from 'react-icons/md'
+import {
+  useGetAllUsersQuery,
+  useUpdateUserBlockTypeMutation,
+} from '../../redux/usersApis'
+import Loader from '../loading/ReactLoader'
+import toast from 'react-hot-toast'
 
 const Users = ({ dashboardHome }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [userRole, setUserRole] = useState('USER')
 
-  const fullData = [
-    {
-      key: '1',
-      image: 'https://randomuser.me/api/portraits/men/1.jpg',
-      userName: 'Roosevelt Kozey',
-      contactNumber: '388-790-9022',
-      email: 'Eloise24@yahoo.com',
-      totalBook: 3,
-      joined: '2025-01-10',
-      status: 'Blocked',
-    },
-    {
-      key: '2',
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
-      userName: 'Russell Veum',
-      contactNumber: '983-842-7095',
-      email: 'Nigelt@hotmail.com',
-      totalBook: 3,
-      joined: '2025-01-10',
-      status: 'Active',
-    },
-  ]
+  const {
+    data: usersData,
+    isLoading,
+    isError,
+  } = useGetAllUsersQuery({
+    page: currentPage,
+    role: userRole,
+  })
 
-  const [data, setData] = useState(fullData)
+  const [updateUserBlockType] = useUpdateUserBlockTypeMutation()
+
+  const navigate = useNavigate()
+
+  const transformedData =
+    usersData?.data?.map((user) => ({
+      key: user._id,
+      image: user.img || 'https://randomuser.me/api/portraits/men/1.jpg',
+      userName: user.name,
+      contactNumber: user.phone || 'N/A',
+      email: user.email,
+      totalBook: 0,
+      joined: new Date(user.createdAt).toISOString().split('T')[0],
+      status: user.block ? 'Blocked' : 'Active',
+      userData: user,
+    })) || []
 
   const columns = [
     {
@@ -45,7 +52,11 @@ const Users = ({ dashboardHome }) => {
       key: 'userName',
       render: (text, record) => (
         <div className="flex items-center space-x-3">
-          <img src={record.image} alt="" className="w-12 h-12 rounded-full" />
+          <img
+            src={record.image}
+            alt=""
+            className="w-12 h-12 rounded-full object-cover"
+          />
           <span className="text-gray-900 font-medium">{text}</span>
         </div>
       ),
@@ -60,14 +71,14 @@ const Users = ({ dashboardHome }) => {
       dataIndex: 'email',
       key: 'email',
     },
-    {
-      title: 'Total Book',
-      dataIndex: 'totalBook',
-      key: 'totalBook',
-      render: (text) => (
-        <span className="px-4 py-2 bg-blue-100 rounded-md">{text}</span>
-      ),
-    },
+    // {
+    //   title: 'Total Book',
+    //   dataIndex: 'totalBook',
+    //   key: 'totalBook',
+    //   render: (text) => (
+    //     <span className="px-4 py-2 bg-blue-100 rounded-md">{text}</span>
+    //   ),
+    // },
     {
       title: 'Joined',
       dataIndex: 'joined',
@@ -90,7 +101,7 @@ const Users = ({ dashboardHome }) => {
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
+      render: (_, record) => (
         <div className="flex space-x-2">
           <Button
             type="primary"
@@ -106,7 +117,7 @@ const Users = ({ dashboardHome }) => {
                 ? 'bg-blue-500 text-white'
                 : 'bg-red-500 text-white'
             }
-            onClick={() => confirmDeleteUser(record)}
+            onClick={() => confirmStatusChange(record)}
           />
         </div>
       ),
@@ -123,39 +134,66 @@ const Users = ({ dashboardHome }) => {
     setSelectedUser(null)
   }
 
-  const confirmDeleteUser = (user) => {
+  const confirmStatusChange = (user) => {
     setSelectedUser(user)
     setIsDeleteModalVisible(true)
   }
 
-  const handleDeleteUser = () => {
-    const user = { ...selectedUser }
-    user.status = user.status === 'Active' ? 'Blocked' : 'Active'
-    setData(
-      data.map((item) =>
-        item.key === user.key ? { ...item, status: user.status } : item
-      )
-    )
-    setIsDeleteModalVisible(false)
-    setSelectedUser(null)
+  const handleStatusChange = async () => {
+    try {
+      await updateUserBlockType({
+        id: selectedUser.key,
+      })
+      toast.success('User status changed successfully!')
+      setIsDeleteModalVisible(false)
+      setSelectedUser(null)
+    } catch (error) {
+      toast.error('Error changing user status')
+    }
   }
 
-  const Navigate = useNavigate()
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  if (isLoading) {
+    return <Loader />
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center py-10 text-red-500">
+        Error loading users. Please try again.
+      </div>
+    )
+  }
 
   return (
     <div className="mb-20">
       {!dashboardHome && (
         <h1
           className="text-xl font-semibold cursor-pointer mt-5"
-          onClick={() => Navigate(-1)}
+          onClick={() => navigate(-1)}
         >
           ← Users
         </h1>
       )}
+
       <Table
         columns={columns}
-        dataSource={data}
-        pagination={dashboardHome ? false : { position: ['bottomCenter'] }}
+        dataSource={transformedData}
+        pagination={
+          dashboardHome
+            ? false
+            : {
+                position: ['bottomCenter'],
+                current: currentPage,
+                pageSize: 10,
+                total: usersData?.pagination?.totalItems || 0,
+                onChange: handlePageChange,
+                showSizeChanger: false,
+              }
+        }
         className="mt-5"
       />
 
@@ -164,41 +202,43 @@ const Users = ({ dashboardHome }) => {
           visible={isModalVisible}
           onCancel={handleCloseModal}
           footer={null}
-          className="modal-profile px-2 py-2 "
+          className="modal-profile px-2 py-2"
           centered
           width={450}
         >
-          <div className="flex flex-col items-center text-center ">
-            <img
+          <div className="flex flex-col items-center text-center">
+            <Image
               src={selectedUser.image}
               alt={selectedUser.userName}
-              className="w-32 h-32 rounded-full mb-4"
+              className="w-32 h-32 rounded-full mb-4 object-cover"
+              width={100}
+              height={100}
             />
             <h2 className="text-xl font-semibold">{selectedUser.userName}</h2>
             <p className="text-gray-600">{selectedUser.contactNumber}</p>
             <p className="text-gray-600">{selectedUser.email}</p>
             <p className="text-gray-600">{selectedUser.status}</p>
 
-            <div className="grid grid-cols-2  border-black mt-4">
-              <div className="text-center border-r border-t  border-black  p-5">
+            {/* <div className="grid grid-cols-2 border-black mt-4">  
+              <div className="text-center border-r border-t border-black p-5">
                 <span className="text-xl font-bold">
-                  {selectedUser.totalBook}
+                  {selectedUser.totalBook || 0}
                 </span>
                 <p>Total Bookings</p>
               </div>
-              <div className="text-center border-t border-black  p-5">
-                <span className="text-xl font-bold">{3}</span>{' '}
+              <div className="text-center border-t border-black p-5">
+                <span className="text-xl font-bold">{0}</span>
                 <p>Upcoming Bookings</p>
               </div>
-              <div className="text-center border-r border-t  border-black  p-5">
-                <span className="text-xl font-bold">{8}</span>{' '}
+              <div className="text-center border-r border-t border-black p-5">
+                <span className="text-xl font-bold">{0}</span>
                 <p>Completed Bookings</p>
               </div>
-              <div className="text-center border-t  border-black  p-5">
-                <span className="text-xl font-bold">{1}</span>{' '}
+              <div className="text-center border-t border-black p-5">
+                <span className="text-xl font-bold">{0}</span>
                 <p>Cancelled Bookings</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </Modal>
       )}
@@ -206,9 +246,9 @@ const Users = ({ dashboardHome }) => {
       <Modal
         visible={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
-        onOk={handleDeleteUser}
+        onOk={handleStatusChange}
         okText={
-          selectedUser?.status === 'Active' ? `Yes, block ` : `Yes, unblock `
+          selectedUser?.status === 'Active' ? 'Yes, block' : 'Yes, unblock'
         }
         cancelText="Cancel"
         centered

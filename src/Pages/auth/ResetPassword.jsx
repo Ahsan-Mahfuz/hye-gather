@@ -2,12 +2,38 @@ import { Form, Input, Button, Checkbox } from 'antd'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 import hye_logo from '../../assets/hye_logo.svg'
+import { useResetPasswordMutation } from '../../redux/authApis'
+import { FiLoader } from 'react-icons/fi'
 const ResetPassword = () => {
   const navigate = useNavigate()
-  const onFinish = (values) => {
-    console.log(values)
-    toast.success('Password reset successfully!')
-    navigate('/login')
+
+  const [postResetPassword, { isLoading }] = useResetPasswordMutation()
+  const [form] = Form.useForm()
+
+  const onFinish = async (values) => {
+    try {
+      const token = localStorage.getItem('reset-token')
+      if (!token) {
+        toast.error('Reset token not found')
+        return
+      }
+
+      await postResetPassword({
+        password: values.password,
+        confirm_password: values.confirmPassword,
+      })
+        .unwrap()
+        .then((res) => {
+          toast.success(res?.message)
+          form.resetFields()
+          localStorage.removeItem('reset-token')
+          localStorage.removeItem('email')
+          localStorage.removeItem('token')
+          navigate('/login')
+        })
+    } catch (error) {
+      toast.error(error?.data?.message)
+    }
   }
 
   return (
@@ -62,12 +88,20 @@ const ResetPassword = () => {
           </Form.Item>
 
           <Form.Item>
-            <button
-              type="submit"
+            <Button
+              htmlType="submit"
+              disabled={isLoading}
               className="w-full bg-blue-900 hover:bg-blue-800 text-white h-[42px] rounded-md"
             >
-              Reset Password
-            </button>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  Loading...
+                  <FiLoader />
+                </div>
+              ) : (
+                'Reset Password'
+              )}
+            </Button>
           </Form.Item>
         </Form>
 

@@ -191,10 +191,12 @@ const ServiceCategory = () => {
                 <div>
                   <UploadOutlined />
                   <div>Upload</div>
-                </div>
+                </div>  
               )}
             </Upload>
           </Form.Item>
+
+
           <Form.Item
             name="name"
             label="Category Name"

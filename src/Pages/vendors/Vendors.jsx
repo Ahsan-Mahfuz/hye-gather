@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Button, Modal } from 'antd'
+import { Table, Button, Modal, Image } from 'antd'
 import 'tailwindcss/tailwind.css'
 import { useNavigate } from 'react-router-dom'
 import { FaStar, FaUserCircle } from 'react-icons/fa'
@@ -7,51 +7,39 @@ import deleteUser from '../../assets/delete-user.png'
 import { IoIosWarning } from 'react-icons/io'
 import { MdBlock } from 'react-icons/md'
 
+import { url } from '../../redux/main/server'
+import {
+  useGetAllVendorsQuery,
+  useUpdateVendorBlockTypeMutation,
+} from '../../redux/vendorApis'
+
 const Vendors = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
 
-  const fullData = [
-    {
-      key: '1',
-      image: 'https://randomuser.me/api/portraits/men/1.jpg',
-      userName: 'Roosevelt Kozey',
-      contactNumber: '388-790-9022',
-      email: 'Eloise24@yahoo.com',
-      totalBook: 3,
-      joined: '2025-01-10',
-      subscription: 'Blocked',
-      categories: [
-        'cat1',
-        'cat2',
-        'cat3',
-        'cat1',
-        'cat2',
-        'cat3',
-        'cat1',
-        'cat2',
-        'cat3',
-      ],
-      reviews: 4.8,
-      reviewsNumber: 125,
-    },
-    {
-      key: '2',
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
-      userName: 'Russell Veum',
-      contactNumber: '983-842-7095',
-      email: 'Nigelt@hotmail.com',
-      totalBook: 3,
-      joined: '2025-01-10',
-      subscription: 'Active',
-      reviews: 4,
-      reviewsNumber: 125,
-      categories: ['cat2', 'cat3'],
-    },
-  ]
+  const { data: vendorsData, isLoading, refetch } = useGetAllVendorsQuery()
+  const [updateVendorBlock] = useUpdateVendorBlockTypeMutation()
 
-  const [data, setData] = useState(fullData)
+  const navigate = useNavigate()
+
+  const transformedData =
+    vendorsData?.data?.map((vendor) => ({
+      key: vendor._id,
+      userId: vendor.user_details._id,
+      image: vendor.user_details.img.startsWith('http')
+        ? vendor.user_details.img
+        : `${url}/${vendor.user_details.img}`,
+      userName: vendor.user_details.name,
+      contactNumber: vendor.user_details.phone,
+      email: vendor.user_details.email,
+      totalBook: vendor.total_booking,
+      subscription: vendor.user_details.block ? 'Blocked' : 'Active',
+      categories: vendor.business_services.map((service) => service.name),
+      reviews: vendor.rating,
+      reviewsNumber: vendor.total_rated,
+      vendorType: vendor.vendor_type,
+    })) || []
 
   const columns = [
     {
@@ -60,7 +48,15 @@ const Vendors = () => {
       key: 'userName',
       render: (text, record) => (
         <div className="flex items-center space-x-3">
-          <img src={record.image} alt="" className="w-12 h-12 rounded-full" />
+          <img
+            src={record.image}
+            alt=""
+            className="w-12 h-12 rounded-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null
+              e.target.src = 'https://randomuser.me/api/portraits/men/1.jpg'
+            }}
+          />
           <span className="text-gray-900 font-medium">{text}</span>
         </div>
       ),
@@ -81,7 +77,7 @@ const Vendors = () => {
       key: 'categories',
       render: (categories) => (
         <div className="flex flex-wrap gap-2 w-[300px]">
-          {categories.slice(0, 2).map((category, index) => (
+          {categories?.slice(0, 2).map((category, index) => (
             <span
               key={index}
               className="px-4 py-2 bg-green-100 rounded-md text-green-800"
@@ -89,7 +85,7 @@ const Vendors = () => {
               {category}
             </span>
           ))}
-          {categories.length > 2 && (
+          {categories?.length > 2 && (
             <span className="px-4 py-2 bg-green-100 rounded-md text-green-800">
               +{categories.length - 2}
             </span>
@@ -105,13 +101,9 @@ const Vendors = () => {
         <span className="px-4 py-2 bg-blue-100 rounded-md">{text}</span>
       ),
     },
+
     {
-      title: 'Joined',
-      dataIndex: 'joined',
-      key: 'joined',
-    },
-    {
-      title: 'Subscription',
+      title: 'Status',
       dataIndex: 'subscription',
       key: 'subscription',
       render: (text) => (
@@ -139,9 +131,9 @@ const Vendors = () => {
             type="primary"
             icon={<MdBlock />}
             className={
-              selectedUser?.key === record.key
-                ? 'bg-blue-500 text-white'
-                : 'bg-red-500 text-white'
+              record.subscription === 'Active'
+                ? 'bg-red-500 text-white'
+                : 'bg-blue-500 text-white'
             }
             onClick={() => confirmDeleteUser(record)}
           />
@@ -165,33 +157,29 @@ const Vendors = () => {
     setIsDeleteModalVisible(true)
   }
 
-  const handleDeleteUser = () => {
-    const user = { ...selectedUser }
-    user.subscription = user.subscription === 'Active' ? 'Blocked' : 'Active'
-    setData(
-      data.map((item) =>
-        item.key === user.key
-          ? { ...item, subscription: user.subscription }
-          : item
-      )
-    )
-    setIsDeleteModalVisible(false)
-    setSelectedUser(null)
+  const handleDeleteUser = async () => {
+    try {
+      await updateVendorBlock({ id: selectedUser.userId }).unwrap()
+      refetch()
+      setIsDeleteModalVisible(false)
+      setSelectedUser(null)
+    } catch (error) {
+      console.error('Error updating vendor block status:', error)
+    }
   }
-
-  const Navigate = useNavigate()
 
   return (
     <div className="mb-20">
       <h1
         className="text-xl font-semibold cursor-pointer mt-5"
-        onClick={() => Navigate(-1)}
+        onClick={() => navigate(-1)}
       >
         ← Vendors
       </h1>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={transformedData}
+        loading={isLoading}
         pagination={{ position: ['bottomCenter'] }}
         className="mt-5"
       />
@@ -201,15 +189,21 @@ const Vendors = () => {
           visible={isModalVisible}
           onCancel={handleCloseModal}
           footer={null}
-          className="modal-profile px-2 py-2 "
+          className="modal-profile px-2 py-2"
           centered
           width={450}
         >
-          <div className="flex flex-col items-center text-center ">
-            <img
+          <div className="flex flex-col items-center text-center">
+            <Image
               src={selectedUser.image}
               alt={selectedUser.userName}
-              className="w-32 h-32 rounded-full mb-4"
+              className="w-32 h-32 rounded-full mb-4 object-cover"
+              width={100}
+              height={100}
+              onError={(e) => {
+                e.target.onerror = null
+                e.target.src = 'https://randomuser.me/api/portraits/men/1.jpg'
+              }}
             />
             <h2 className="text-xl font-semibold">{selectedUser.userName}</h2>
             <div className="flex items-center">
@@ -224,40 +218,49 @@ const Vendors = () => {
                 />
               ))}
               <p className="text-gray-600 ml-2">
-                {selectedUser.reviews} Reviews
+                {selectedUser.reviews} ({selectedUser.reviewsNumber} reviews)
               </p>
             </div>
             <p className="text-gray-600">{selectedUser.contactNumber}</p>
             <p className="text-gray-600">{selectedUser.email}</p>
+            <p className="mt-2 px-3 py-1 bg-purple-100 text-purple-800 rounded-full">
+              {selectedUser.vendorType}
+            </p>
 
-            <div className="flex flex-wrap items-center justify-center  w-full  x-auto gap-2 mt-5">
-              {selectedUser.categories.map((category) => (
+            <div className="flex flex-wrap items-center justify-center w-full gap-2 mt-5">
+              {selectedUser.categories?.map((category, index) => (
                 <span
-                  className="text-gray-600 mr-2 px-2 py-1 bg-blue-100 rounded-md "
-                  key={category}
+                  className="text-gray-600 mr-2 px-2 py-1 bg-blue-100 rounded-md"
+                  key={index}
                 >
                   {category}
                 </span>
               ))}
             </div>
 
-            <div className="grid grid-cols-2  border-black mt-4">
-              <div className="text-center border-r border-t  border-black  p-5">
+            <div className="grid grid-cols-2 border-black mt-4">
+              <div className="text-center border-r border-t border-black p-5">
                 <span className="text-xl font-bold">
                   {selectedUser.totalBook}
                 </span>
                 <p>Total Bookings</p>
               </div>
-              <div className="text-center border-t border-black  p-5">
-                <span className="text-xl font-bold">{3}</span>{' '}
+              <div className="text-center border-t border-black p-5">
+                <span className="text-xl font-bold">
+                  {selectedUser.reviewsNumber}
+                </span>
                 <p>Total Reviews</p>
               </div>
-              <div className="text-center border-r border-t  border-black  p-5">
-                <span className="text-xl font-bold">{8}</span>{' '}
+              <div className="text-center border-r border-t border-black p-5">
+                <span className="text-xl font-bold">
+                  {selectedUser.totalBook}{' '}
+                  {/* Replace with completed bookings if available */}
+                </span>
                 <p>Completed Bookings</p>
               </div>
-              <div className="text-center border-t  border-black  p-5">
-                <span className="text-xl font-bold">{1}</span>{' '}
+              <div className="text-center border-t border-black p-5">
+                <span className="text-xl font-bold">0</span>{' '}
+                {/* Replace with cancelled bookings if available */}
                 <p>Cancelled Bookings</p>
               </div>
             </div>
@@ -271,8 +274,8 @@ const Vendors = () => {
         onOk={handleDeleteUser}
         okText={
           selectedUser?.subscription === 'Active'
-            ? `Yes, block `
-            : `Yes, unblock `
+            ? `Yes, block`
+            : `Yes, unblock`
         }
         cancelText="Cancel"
         centered

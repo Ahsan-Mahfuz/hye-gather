@@ -1,12 +1,59 @@
-import { Form, Input } from 'antd'
+import { Button, Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import hye_logo from '../../assets/hye_logo.svg'
+import toast from 'react-hot-toast'
+import { useState } from 'react'
+import { useVerifyEmailOtpMutation } from '../../redux/authApis'
+import { FiLoader } from 'react-icons/fi'
 const SendOtp = () => {
   const navigate = useNavigate()
+  const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const [form] = Form.useForm()
+  const validateOtp = () => {
+    const joinedOtp = otp.join('')
+    if (joinedOtp.length !== 6) {
+      return Promise.reject(new Error('Please enter a 6-digit code!'))
+    }
+    return Promise.resolve()
+  }
+  const [postVerifyAccount, { isLoading }] = useVerifyEmailOtpMutation()
 
-  const onFinishOtp = (values) => {
-    console.log(values)
-    navigate('/login')
+  const onFinishOtp = async () => {
+    const email = localStorage.getItem('email') || ''
+    if (!email) {
+      navigate('/forget-password')
+    }
+    try {
+      await postVerifyAccount({
+        email: email,
+        code: otp.join(''),
+      })
+        .unwrap()
+        .then((res) => {
+          toast.success(res?.message)
+          form.resetFields()
+          localStorage.removeItem('reset-token')
+          console.log('reset token', res?.data?.resetToken)
+          console.log('token', res?.data?.token)
+          localStorage.setItem('reset-token', res?.data?.resetToken)
+          navigate('/reset-password')
+        })
+    } catch (error) {
+      toast.error(error?.data?.message)
+    }
+  }
+
+  const handleOtpChange = (value, index) => {
+    const newOtp = [...otp]
+    newOtp[index] = value
+    setOtp(newOtp)
+
+    if (value && index < 5) {
+      const nextInput = document.getElementById(`otp-${index + 1}`)
+      if (nextInput) {
+        nextInput.focus()
+      }
+    }
   }
 
   return (
@@ -25,24 +72,39 @@ const SendOtp = () => {
           className="w-full max-w-sm"
         >
           <Form.Item
+            style={{ textAlign: 'center' }}
             name="otp"
-            rules={[{ required: true, message: 'Please enter the OTP!' }]}
+            rules={[{ validator: validateOtp }]}
           >
-            <div className="flex gap-2">
-              <Input.OTP
-                length={6}
-                className="w-12 h-[42px] text-center border-gray-300 rounded-md"
-              />
+            <div className="flex gap-2  justify-center">
+              {otp.map((_, index) => (
+                <Input
+                  key={index}
+                  id={`otp-${index}`}
+                  maxLength={1}
+                  className="w-12 h-[42px] text-center border-gray-300 rounded-md"
+                  value={otp[index]}
+                  onChange={(e) => handleOtpChange(e.target.value, index)}
+                />
+              ))}
             </div>
           </Form.Item>
 
           <Form.Item>
-            <button
-              type="submit"
+            <Button
+              htmlType="submit"
               className="w-full bg-blue-900 hover:bg-blue-800 text-white h-[42px] rounded-md"
+              disabled={isLoading}
             >
-              Next
-            </button>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  Loading...
+                  <FiLoader />
+                </div>
+              ) : (
+                'Next'
+              )}
+            </Button>
           </Form.Item>
         </Form>
 

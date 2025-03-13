@@ -1,11 +1,32 @@
-import { Form, Input, Button } from 'antd'
+import { Button, Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import hye_logo from '../../assets/hye_logo.svg'
+import toast from 'react-hot-toast'
+import { useResendOtpMutation } from '../../redux/authApis'
+import { FiLoader } from 'react-icons/fi'
 const ForgetPassword = () => {
   const navigate = useNavigate()
-  const onFinish = (values) => {
-    console.log(values)
-    navigate('/send-otp')
+
+  const [postResendOtp, { isLoading }] = useResendOtpMutation()
+
+  const [form] = Form.useForm()
+
+  const onFinish = async (values) => {
+    try {
+      await postResendOtp({
+        email: values.email,
+      })
+        .unwrap()
+        .then((res) => {
+          toast.success(res?.message)
+          form.resetFields()
+          localStorage.removeItem('email')
+          localStorage.setItem('email', values.email)
+          navigate('/send-otp')
+        })
+    } catch (error) {
+      toast.error(error?.data?.message)
+    }
   }
 
   return (
@@ -32,12 +53,20 @@ const ForgetPassword = () => {
           </Form.Item>
 
           <Form.Item>
-            <button
-              type="submit"
+            <Button
+              htmlType="submit"
               className="w-full bg-blue-900 hover:bg-blue-800 disabled:bg-gray-400 text-white h-[42px] rounded-md"
+              disabled={isLoading}
             >
-              Send OTP
-            </button>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  Loading...
+                  <FiLoader />
+                </div>
+              ) : (
+                'Send OTP'
+              )}
+            </Button>
           </Form.Item>
         </Form>
 

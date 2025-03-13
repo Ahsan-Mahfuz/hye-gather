@@ -1,44 +1,49 @@
 import React, { useState } from 'react'
 import { Table, Button, Modal } from 'antd'
-import { CloseOutlined, CheckCircleOutlined } from '@ant-design/icons'
-import 'tailwindcss/tailwind.css'
 import { FaStar, FaUserCircle } from 'react-icons/fa'
 import { MdBlock } from 'react-icons/md'
 import { IoIosWarning } from 'react-icons/io'
+import { useGetEarningsQuery } from '../../redux/earningsApis'
+import { url } from '../../redux/main/server'
+import { useUpdateVendorBlockTypeMutation } from '../../redux/vendorApis'
+import Loader from '../loading/ReactLoader'
 
 const VendorTable = () => {
-  const data = [
-    {
-      key: '1',
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
-      name: 'Charlotte Mante',
-      email: 'frostman@mac.com',
-      type: 'Subscription Purchase',
-      date: '16/08/2013',
-      plan: 'Monthly',
-      amount: '$29',
-      subscription: 'Blocked', 
-      reviews: 4.0,
-      reviewsNumber: 125,
-      contactNumber: '388-790-9022',
+  const {
+    data: earningsData,
+    isLoading,
+    refetch,
+    error,
+  } = useGetEarningsQuery()
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [updateVendorBlock] = useUpdateVendorBlockTypeMutation()
 
-    },
-    {
-      key: '2',
-      image: 'https://randomuser.me/api/portraits/men/10.jpg',
-      name: 'Margaret Hessel II',
-      email: 'chronos@aol.com',
-      type: 'Subscription Renew',
-      date: '28/10/2012',
-      plan: 'Yearly',
-      amount: '$290',
-      subscription: 'Active',
-      reviews: 5.0,
-      reviewsNumber: 100,
-      contactNumber: '388-790-9022',
+  const getTransformedData = () => {
+    if (!earningsData || !earningsData.data) return []
 
-    },
-  ]
+    return earningsData.data.map((item) => ({
+      key: item._id,
+      userId: item.user._id,
+      image: item.user.img
+        ? `${url}/${item.user.img}`
+        : 'https://placehold.co/400x400',
+      name: item.user.name,
+      email: item.user.email,
+      type: item.purpose === 'BASIC' ? 'Subscription Purchase' : 'Other',
+      date: new Date(item.createdAt).toLocaleDateString(),
+      plan: item.subscription_type === 'YEARLY' ? 'Yearly' : 'Monthly',
+      amount: `$${item.amount}`,
+      subscription: item.status ? 'Active' : 'Blocked',
+      reviews: 4.5,
+      reviewsNumber: 50,
+      contactNumber: '388-790-9022',
+      paymentMethod: item.pay_by,
+    }))
+  }
+
+  const tableData = getTransformedData()
 
   const columns = [
     {
@@ -77,24 +82,24 @@ const VendorTable = () => {
       dataIndex: 'amount',
       key: 'amount',
     },
-    {
-      title: 'Subscription',
-      dataIndex: 'subscription',
-      key: 'subscription',
-      render: (text) => (
-        <div
-          className={`badge ${
-            text === 'Active' ? 'bg-green-500' : 'bg-red-500'
-          } text-white py-1 px-3 rounded w-[100px] flex items-center justify-center`}
-        >
-          {text}
-        </div>
-      ),
-    },
+    // {
+    //   title: 'Subscription',
+    //   dataIndex: 'subscription',
+    //   key: 'subscription',
+    //   render: (text) => (
+    //     <div
+    //       className={`badge ${
+    //         text === 'Active' ? 'bg-green-500' : 'bg-red-500'
+    //       } text-white py-1 px-3 rounded w-[100px] flex items-center justify-center`}
+    //     >
+    //       {text}
+    //     </div>
+    //   ),
+    // },
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
+      render: (_, record) => (
         <div className="flex space-x-2">
           <Button
             type="primary"
@@ -102,7 +107,7 @@ const VendorTable = () => {
             className="bg-blue-800 text-white"
             onClick={() => handleViewProfile(record)}
           />
-          <Button
+          {/* <Button
             type="primary"
             icon={<MdBlock />}
             className={
@@ -111,16 +116,11 @@ const VendorTable = () => {
                 : 'bg-red-500 text-white'
             }
             onClick={() => confirmDeleteUser(record)}
-          />
+          /> */}
         </div>
       ),
     },
   ]
-
-  const [isModalVisible, setIsModalVisible] = useState(false)
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [dataState, setData] = useState(data)
 
   const handleViewProfile = (user) => {
     setSelectedUser(user)
@@ -137,28 +137,42 @@ const VendorTable = () => {
     setIsDeleteModalVisible(true)
   }
 
-  const handleDeleteUser = () => {
-    const user = { ...selectedUser }
-    user.subscription = user.subscription === 'Active' ? 'Blocked' : 'Active'
-    setData(
-      dataState.map((item) =>
-        item.key === user.key
-          ? { ...item, subscription: user.subscription }
-          : item
-      )
-    )
-    setIsDeleteModalVisible(false)
-    setSelectedUser(null)
+  const handleDeleteUser = async () => {
+    try {
+      await updateVendorBlock({ id: selectedUser.userId }).unwrap()
+      refetch()
+      setIsDeleteModalVisible(false)
+      setSelectedUser(null)
+    } catch (error) {
+      console.error('Error updating vendor block status:', error)
+    }
   }
+
+  // const handleDeleteUser = () => {
+  //   setIsDeleteModalVisible(false)
+  //   setSelectedUser(null)
+  // }
+
+  if (isLoading) return <Loader />
+  if (error)
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error loading data: {error.message}
+      </div>
+    )
 
   return (
     <div className="mt-5">
-      <h1 className="text-xl font-semibold py-5 bg-white mb-2 px-2">Earnings History </h1>
+      <h1 className="text-xl font-semibold py-5 bg-white mb-2 px-2">
+        Earnings History
+      </h1>
       <Table
         columns={columns}
-        dataSource={dataState}
-        pagination={{ pageSize: 4, position: ['bottomCenter'] }}
+        dataSource={tableData}
+        pagination={{ position: ['bottomCenter'] }}
+        loading={isLoading}
       />
+
       {selectedUser && (
         <Modal
           visible={isModalVisible}
@@ -189,7 +203,8 @@ const VendorTable = () => {
                 />
               ))}
               <p className="text-gray-600 ml-2">
-                {selectedUser.reviews} Reviews
+                {selectedUser.reviews} Rating ({selectedUser.reviewsNumber}{' '}
+                reviews)
               </p>
             </div>
             <p className="text-gray-600">
@@ -197,18 +212,12 @@ const VendorTable = () => {
             </p>
             <p className="text-gray-600">{selectedUser.email}</p>
 
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
-              {selectedUser.categories?.map((category, index) => (
-                <span
-                  className="text-gray-600 mr-2 px-2 py-1 bg-blue-100 rounded-md"
-                  key={index}
-                >
-                  {category}
-                </span>
-              ))}
+            <div className="bg-gray-100 p-3 rounded-lg w-full mt-4">
+              <p className="font-medium">Payment Method</p>
+              <p>{selectedUser.paymentMethod || 'CARD'}</p>
             </div>
 
-            <div className="grid grid-cols-2 border-black mt-4">
+            <div className="grid grid-cols-2 border-black mt-4 w-full">
               <div className="text-center border-r border-t p-5">
                 <span className="text-xl font-bold">
                   {selectedUser.totalBook || 0}
@@ -220,11 +229,13 @@ const VendorTable = () => {
                 <p>Complete Bookings</p>
               </div>
               <div className="text-center border-r border-t p-5">
-                <span className="text-xl font-bold">{8}</span>
+                <span className="text-xl font-bold">{1}</span>
                 <p>Cancel Bookings</p>
               </div>
               <div className="text-center border-t p-5">
-                <span className="text-xl font-bold">{1}</span>
+                <span className="text-xl font-bold">
+                  {selectedUser.reviewsNumber || 0}
+                </span>
                 <p>Total Reviews</p>
               </div>
             </div>
@@ -254,17 +265,12 @@ const VendorTable = () => {
           },
         }}
       >
-        <div
-          className="text-lg bg-no-repeat bg-left-top bg-contain h-[200px] object-contain"
-          style={{
-            backgroundImage: `url(/path/to/your/warning-image.jpg)`, // Add image URL here
-          }}
-        >
-          <div className="flex justify-center items-end">
+        <div className="text-lg h-[200px] flex flex-col items-center justify-center">
+          <div className="flex justify-center">
             <IoIosWarning className="text-7xl text-yellow-400" />
           </div>
-          <div className="font-bold text-5xl text-center">Warning</div>
-          <div className="p-5 text-center text-red-700">
+          <div className="font-bold text-4xl text-center mt-2">Warning</div>
+          <div className="p-3 text-center text-red-700">
             Are you sure you want to{' '}
             {selectedUser?.subscription === 'Active' ? 'block' : 'unblock'} this
             user?

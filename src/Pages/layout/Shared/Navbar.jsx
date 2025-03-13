@@ -3,8 +3,10 @@ import { MdNotificationsNone } from 'react-icons/md'
 import { FaUserCircle } from 'react-icons/fa'
 import { Popover } from 'antd'
 import { Link } from 'react-router-dom'
+import { useGetProfileDataQuery } from '../../../redux/profileApis'
 
 const Navbar = () => {
+  const { data: profileData } = useGetProfileDataQuery()
   const [visible, setVisible] = useState(false)
   const [notifications, setNotifications] = useState([
     { id: 1, message: 'New order received', read: false, createdAt: '2h ago' },
@@ -84,8 +86,8 @@ const Navbar = () => {
         >
           <FaUserCircle className="text-3xl text-white" />
           <div className="text-left ">
-            <p className="text-sm font-semibold">John Doe</p>
-            <p className="text-xs ">john.doe@example.com</p>
+            <p className="text-sm font-semibold">{profileData?.data?.name}</p>
+            <p className="text-xs ">{profileData?.data?.email}</p>
           </div>
         </Link>
       </div>
