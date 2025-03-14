@@ -19,10 +19,12 @@ import PromoCodes from '../Pages/promoCodes/PromoCodes'
 import ServiceCategory from '../Pages/serviceCategory/ServiceCategory'
 import Subscription from '../Pages/subscription/Subscription'
 import FAQ from '../Pages/faq/FAQ'
+import ErrorBoundary from '../Pages/ErrorBoundary'
 
 const router = createBrowserRouter([
   {
     path: '/',
+    errorElement: <ErrorBoundary />,
     element: (
       <AdminRoute>
         <Dashboard />

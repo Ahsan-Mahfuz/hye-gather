@@ -21,6 +21,7 @@ export const baseApis = createApi({
     'users',
     'vendors',
     'promoCodes',
+    'category',
   ],
   endpoints: () => ({}),
 })

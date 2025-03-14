@@ -10,7 +10,6 @@ import { BiSolidOffer } from 'react-icons/bi'
 import { GrServices } from 'react-icons/gr'
 import { PiUsersFourFill } from 'react-icons/pi'
 import { MdPaid } from 'react-icons/md'
-import { isAction } from '@reduxjs/toolkit'
 
 const Sidebar = () => {
   const menuItems = [
@@ -54,7 +53,6 @@ const Sidebar = () => {
       link: '/terms-and-condition',
       icon: <FaShieldAlt />,
     },
-    { name: 'Log out', link: '/login', icon: <CiLogout /> },
   ]
   const Navigate = useNavigate()
   return (
@@ -68,7 +66,38 @@ const Sidebar = () => {
           HYE GATHER
         </h2>
       </div>
-      <ul>
+
+      <div className="flex flex-col justify-between h-[80vh]">
+        <div>
+          {menuItems.map((item, index) => (
+            <NavLink
+              to={item?.link}
+              key={index}
+              className={({ isActive }) =>
+                `flex items-center  py-3 rounded-3xl my-1 pl-6 hover:bg-[#0033A0] cursor-pointer hover:text-white ${
+                  isActive ? 'bg-[#0033A0] text-white' : ''
+                }`
+              }
+            >
+              <span className="mr-4 text-xl">{item.icon}</span>
+              <span>{item.name}</span>
+            </NavLink>
+          ))}
+        </div>
+        <Link
+          to={'/login'}
+          onClick={() => localStorage.clear()}
+          className={`flex items-center text-red-500 font-bold py-3 rounded-3xl my-1 pl-6 hover:bg-red-200 cursor-pointer `}
+        >
+          <span>
+            <CiLogout className="mr-4 text-2xl" />
+          </span>
+          <span>
+            <div>Log out</div>
+          </span>
+        </Link>
+      </div>
+      {/* <ul>
         {menuItems.map((item, index) => (
           <NavLink
             to={item?.link}
@@ -83,7 +112,7 @@ const Sidebar = () => {
             <span>{item.name}</span>
           </NavLink>
         ))}
-      </ul>
+      </ul> */}
     </div>
   )
 }
