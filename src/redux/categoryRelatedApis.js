@@ -12,10 +12,12 @@ const categoryRelatedApis = baseApis.injectEndpoints({
     }),
     updateCategory: builder.mutation({
       query: (data) => {
-        const { id } = data
+        const { id, body } = data
         return {
           url: `/category/update/${id}`,
           method: 'PATCH',
+          body,
+          formData: true,
         }
       },
       invalidatesTags: ['category'],
@@ -30,6 +32,18 @@ const categoryRelatedApis = baseApis.injectEndpoints({
       },
       invalidatesTags: ['category'],
     }),
+    deleteCategory: builder.mutation({
+      query: (data) => {
+        const { id, body } = data
+
+        return {
+          url: `/category/delete/${id}`,
+          method: 'DELETE',
+          body,
+        }
+      },
+      invalidatesTags: ['category'],
+    }),
   }),
   overrideExisting: false,
 })
@@ -38,5 +52,6 @@ export const {
   useCreateCategoryMutation,
   useGetCategoryQuery,
   useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
 } = categoryRelatedApis
 export default categoryRelatedApis
