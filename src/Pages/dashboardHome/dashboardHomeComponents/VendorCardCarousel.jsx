@@ -3,14 +3,14 @@ import manLogo from '../../../assets/man.svg'
 import LineChartGreen from '../../../assets/Line Chart.svg'
 import LineChartRed from '../../../assets/Line Chart red.svg'
 import hyeLogo from '../../../assets/hye_logo.svg'
-const VendorCardCarousel = () => {
+const VendorCardCarousel = ({ data }) => {
   return (
     <div className="flex justify-between gap-5 mt-5">
       <section className="bg-white shadow-lg rounded-lg p-6 max-w-[600px] w-full  bg-gradient-to-l to-red-[rgba(233,255,233,1)] from-red-100 ">
         <div className="flex justify-between">
           <div>
             <p>Weekly User Statistics</p>
-            <p className="text-2xl font-bold">Joined This Week</p>
+            <p className="text-2xl font-bold">Joined This Month</p>
           </div>
           <div>
             <img src={manLogo} alt="logo" />
@@ -70,7 +70,7 @@ const VendorCardCarousel = () => {
           <img src={manLogo} alt="logo" />
         </div>
         <div className="font-bold text-3xl ">Total Vendors</div>
-        <div className="text-blue-800 font-bold text-5xl">1500+</div>
+        <div className="text-blue-800 font-bold text-5xl">{data?.vendor}</div>
       </section>
     </div>
   )

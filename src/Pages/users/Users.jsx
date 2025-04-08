@@ -11,6 +11,7 @@ import {
 } from '../../redux/usersApis'
 import Loader from '../loading/ReactLoader'
 import toast from 'react-hot-toast'
+import { url } from '../../redux/main/server'
 
 const Users = ({ dashboardHome }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -28,6 +29,8 @@ const Users = ({ dashboardHome }) => {
     role: userRole,
   })
 
+  console.log(usersData)
+
   const [updateUserBlockType] = useUpdateUserBlockTypeMutation()
 
   const navigate = useNavigate()
@@ -35,7 +38,7 @@ const Users = ({ dashboardHome }) => {
   const transformedData =
     usersData?.data?.map((user) => ({
       key: user._id,
-      image: user.img || 'https://randomuser.me/api/portraits/men/1.jpg',
+      image: user.img.startsWith('http') ? user.img : `${url}/${user.img}`,
       userName: user.name,
       contactNumber: user.phone || 'N/A',
       email: user.email,
@@ -208,7 +211,7 @@ const Users = ({ dashboardHome }) => {
         >
           <div className="flex flex-col items-center text-center">
             <Image
-              src={selectedUser.image}
+              src={`${url}/{selectedUser.image}`}
               alt={selectedUser.userName}
               className="w-32 h-32 rounded-full mb-4 object-cover"
               width={100}

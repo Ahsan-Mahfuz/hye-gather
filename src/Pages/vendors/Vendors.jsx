@@ -17,6 +17,7 @@ const Vendors = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [userRole, setUserRole] = useState('USER')
 
   const { data: vendorsData, isLoading, refetch } = useGetAllVendorsQuery()
   const [updateVendorBlock] = useUpdateVendorBlockTypeMutation()
