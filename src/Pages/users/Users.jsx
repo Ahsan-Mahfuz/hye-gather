@@ -211,7 +211,7 @@ const Users = ({ dashboardHome }) => {
         >
           <div className="flex flex-col items-center text-center">
             <Image
-              src={`${url}/{selectedUser.image}`}
+              src={selectedUser.image}
               alt={selectedUser.userName}
               className="w-32 h-32 rounded-full mb-4 object-cover"
               width={100}
