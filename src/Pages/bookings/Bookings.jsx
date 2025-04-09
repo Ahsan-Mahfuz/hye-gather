@@ -315,7 +315,7 @@
 // export default Bookings
 
 import { useState } from 'react'
-import { Button, Modal, Table, Tag, message } from 'antd'
+import { Button, Image, Input, Modal, Table, Tag, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../loading/ReactLoader'
 import { useGetAllBookingsQuery } from '../../redux/bookingsApis'
@@ -347,41 +347,45 @@ const Bookings = () => {
   if (isLoading) return <Loader />
 
   const transformedData =
-    bookingsData?.data?.map((booking) => {
-      const user = booking.user[0]
-      const category = booking.category[0]
-      const vendor = booking.vendor?.[0]
+    bookingsData?.data
+      ?.map((booking) => {
+        const user = booking.user[0]
+        const category = booking.category[0]
+        const vendor = booking.vendor?.[0]
 
-      return {
-        key: booking._id,
-        userName: user.name,
-        userImage: user.img
-          ? `${url}/${user.img}`
-          : 'https://placehold.co/400x400',
-        vendorName: category.name,
-        vendorImage: category.img
-          ? `${url}/${category.img}`
-          : 'https://placehold.co/400x400',
-        vendor_name: vendor?.name,
-        vendor_email: vendor?.email,
-        vendor_phone: vendor?.phone,
-        vendor_image: vendor?.img
-          ? `${url}/${vendor?.img}`
-          : 'https://placehold.co/400x400',
-        vendor_id: vendor?._id,
-        currency: 'USD',
-        amount: booking.price,
-        bookingId: booking._id,
-        status: booking.status,
-        isPaid: booking.is_paid,
-        statusColor:
-          booking.status === 'accepted'
-            ? 'green'
-            : booking.status === 'pending'
-            ? 'blue'
-            : 'red',
-      }
-    }) || []
+        return {
+          key: booking._id,
+          userName: user.name,
+          userImage: user.img
+            ? `${url}/${user.img}`
+            : 'https://placehold.co/400x400',
+          vendorName: category.name,
+          vendorImage: category.img
+            ? `${url}/${category.img}`
+            : 'https://placehold.co/400x400',
+          vendor_name: vendor?.name,
+          vendor_email: vendor?.email,
+          vendor_phone: vendor?.phone,
+          vendor_image: vendor?.img
+            ? `${url}/${vendor?.img}`
+            : 'https://placehold.co/400x400',
+          vendor_id: vendor?._id,
+          currency: 'USD',
+          amount: booking.price,
+          bookingId: booking._id,
+          status: booking.status,
+          isPaid: booking.is_paid,
+          statusColor:
+            booking.status === 'accepted'
+              ? 'purple'
+              : booking.status === 'pending'
+              ? 'blue'
+              : booking.status === 'canceled'
+              ? 'red'
+              : 'green',
+        }
+      })
+      .reverse() || []
 
   const handlePayClick = (record) => {
     setSelectedBooking(record)
@@ -429,10 +433,12 @@ const Bookings = () => {
       dataIndex: 'vendor_name',
       render: (text, record) => (
         <div className="flex items-center space-x-3">
-          <img
+          <Image
             src={record.vendor_image}
             alt=""
-            className="w-10 h-10 rounded-full"
+            className="w-[40px] h-[40px] rounded-full object-cover object-center"
+            width={40}
+            height={40}
           />
           <span>{text}</span>
         </div>
@@ -461,23 +467,36 @@ const Bookings = () => {
       title: 'Status',
       dataIndex: 'status',
       render: (text, record) => (
-        <Tag color={record.statusColor}>{text.toUpperCase()}</Tag>
+        <Tag
+          className="font-bold p-2 w-full max-w-[100px] flex items-center justify-center"
+          color={record.statusColor}
+        >
+          {text.toUpperCase()}
+        </Tag>
       ),
     },
     {
       title: 'Payment',
       dataIndex: 'isPaid',
       render: (paid) => (
-        <Tag color={paid ? 'green' : 'red'}>{paid ? 'Paid' : 'Unpaid'}</Tag>
+        <Tag
+          className="font-bold p-2 w-full max-w-[100px] flex items-center justify-center"
+          color={paid ? 'green' : 'red'}
+        >
+          {paid ? 'Paid' : 'Unpaid'}
+        </Tag>
       ),
     },
     {
       title: 'Pay Vendor',
       key: 'payVendor',
       render: (_, record) => (
-        <Button type="primary" onClick={() => handlePayClick(record)}>
+        <Tag
+          className="font-bold p-2 w-full max-w-[100px] flex items-center justify-center cursor-pointer hover:bg-blue-100"
+          onClick={() => handlePayClick(record)}
+        >
           Pay
-        </Button>
+        </Tag>
       ),
     },
   ]
@@ -502,10 +521,12 @@ const Bookings = () => {
       <Modal
         title={
           <div className="!flex flex-col !items-center justify-center !space-x-3 !mx-auto ">
-            <img
+            <Image
               src={selectedBooking?.vendor_image}
-              alt=""
-              className="w-20 h-20 rounded-full"
+              alt="images"
+              className="w-[200px] object-cover object-center h-[200px] rounded-full"
+              width={200}
+              height={200}
             />
             <span>{selectedBooking?.vendor_name}</span>
           </div>
@@ -534,15 +555,16 @@ const Bookings = () => {
             <input
               type="text"
               disabled
+              readOnly
               value={`Booking ID: ${selectedBooking.bookingId}`}
               className="p-2 border rounded"
             />
-            <input
+            <Input.Password
               type="password"
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="Enter admin password"
-              className="p-2 border rounded outline-none"
+              placeholder="Enter your  password"
+              className="p-2 border rounded ring-4 outline-none"
             />
           </div>
         )}

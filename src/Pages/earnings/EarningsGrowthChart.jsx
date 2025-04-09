@@ -25,13 +25,19 @@ ChartJS.register(
 )
 
 const EarningsGrowthChart = () => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const currentYear = new Date().getFullYear()
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString())
   const { data: earningsData, isLoading } = useGetEarningsChartQuery({
     year_user: selectedYear,
     year_payment: selectedYear,
   })
 
-  const years = earningsData?.payment_year || [new Date().getFullYear()]
+  const years = Array.from(
+    { length: currentYear - 2024 + 1 },
+    (_, i) => 2024 + i
+  ).reverse()
+
+  console.log(years)
 
   const chartData = {
     labels: earningsData?.earningGrowth?.monthNames || [],

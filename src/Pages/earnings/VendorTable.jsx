@@ -132,10 +132,10 @@ const VendorTable = () => {
     setSelectedUser(null)
   }
 
-  const confirmDeleteUser = (user) => {
-    setSelectedUser(user)
-    setIsDeleteModalVisible(true)
-  }
+  // const confirmDeleteUser = (user) => {
+  //   setSelectedUser(user)
+  //   setIsDeleteModalVisible(true)
+  // }
 
   const handleDeleteUser = async () => {
     try {
@@ -191,7 +191,7 @@ const VendorTable = () => {
             <h2 className="text-xl font-semibold">
               {selectedUser.name || 'N/A'}
             </h2>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               {[1, 2, 3, 4, 5].map((star) => (
                 <FaStar
                   key={star}
@@ -206,7 +206,7 @@ const VendorTable = () => {
                 {selectedUser.reviews} Rating ({selectedUser.reviewsNumber}{' '}
                 reviews)
               </p>
-            </div>
+            </div> */}
             <p className="text-gray-600">
               {selectedUser.contactNumber || 'N/A'}
             </p>
@@ -217,7 +217,7 @@ const VendorTable = () => {
               <p>{selectedUser.paymentMethod || 'CARD'}</p>
             </div>
 
-            <div className="grid grid-cols-2 border-black mt-4 w-full">
+            {/* <div className="grid grid-cols-2 border-black mt-4 w-full">
               <div className="text-center border-r border-t p-5">
                 <span className="text-xl font-bold">
                   {selectedUser.totalBook || 0}
@@ -238,7 +238,7 @@ const VendorTable = () => {
                 </span>
                 <p>Total Reviews</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </Modal>
       )}

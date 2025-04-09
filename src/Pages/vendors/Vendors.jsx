@@ -17,7 +17,7 @@ const Vendors = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
-  const [userRole, setUserRole] = useState('USER')
+  // const [userRole, setUserRole] = useState('USER')
 
   const { data: vendorsData, isLoading, refetch } = useGetAllVendorsQuery()
   const [updateVendorBlock] = useUpdateVendorBlockTypeMutation()
@@ -37,7 +37,7 @@ const Vendors = () => {
       totalBook: vendor.total_booking,
       subscription: vendor.user_details.block ? 'Blocked' : 'Active',
       categories: vendor.business_services.map((service) => service.name),
-      reviews: vendor.rating,
+      reviews: vendor?.reviews?.length,
       reviewsNumber: vendor.total_rated,
       vendorType: vendor.vendor_type,
     })) || []

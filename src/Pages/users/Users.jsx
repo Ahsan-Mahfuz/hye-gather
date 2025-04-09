@@ -38,7 +38,7 @@ const Users = ({ dashboardHome }) => {
   const transformedData =
     usersData?.data?.map((user) => ({
       key: user._id,
-      image: user.img.startsWith('http') ? user.img : `${url}/${user.img}`,
+      image: user?.img?.startsWith('http') ? user.img : `${url}/${user.img}`,
       userName: user.name,
       contactNumber: user.phone || 'N/A',
       email: user.email,
@@ -152,6 +152,7 @@ const Users = ({ dashboardHome }) => {
       setSelectedUser(null)
     } catch (error) {
       toast.error('Error changing user status')
+      console.error(error)
     }
   }
 
@@ -247,7 +248,7 @@ const Users = ({ dashboardHome }) => {
       )}
 
       <Modal
-        visible={isDeleteModalVisible}
+        open={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
         onOk={handleStatusChange}
         okText={
